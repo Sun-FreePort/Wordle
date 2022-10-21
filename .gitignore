@@ -1,3 +1,7 @@
+# IDEA
+.idea
+.vs
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
