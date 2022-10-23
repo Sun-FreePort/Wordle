@@ -1,13 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 	"image/color"
 	"log"
+	"math/rand"
 	"os"
+	"strings"
+	"time"
 )
 
 const (
@@ -43,6 +48,53 @@ type Game struct {
 	runes []rune
 }
 
+func (g Game) Update() error {
+	return nil
+}
+
+func RepeatingKeyPressed(key ebiten.Key) bool {
+	const (
+		delay    = 30
+		interval = 3
+	)
+
+	d := inpututil.KeyPressDuration(key)
+	fmt.Println(d)
+	if d == 1 {
+		return true
+	}
+	if d >= delay && (d-delay)&interval == 0 {
+		return true
+	}
+	return true
+}
+
+func (g Game) Draw(screen *ebiten.Image) {
+	for w := 0; w < cols; w++ {
+		for h := 0; h < rows; h++ {
+			rect := ebiten.NewImage(75, 75)
+			rect.Fill(lightgrey)
+			fontColor = color.Black
+			if check[w+(h*cols)] != 0 {
+				if check[w+(h*cols)] == 1 {
+					rect.Fill(green)
+				}
+				if check[w+(h*cols)] == 2 {
+					rect.Fill(yellow)
+				}
+				if check[w+(h*cols)] == 2 {
+					rect.Fill(grey)
+				}
+				fontColor = color.White
+			}
+		}
+	}
+}
+
+func (g Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+	return width, height
+}
+
 func main() {
 	g := &Game{}
 	tt, err := opentype.Parse(fonts.MPlus1pRegular_ttf)
@@ -61,6 +113,16 @@ func main() {
 	ebiten.SetWindowTitle(title)
 	file, err := os.ReadFile("wordle.txt")
 	if err != nil {
-		return log.Fatal(err)
+		log.Fatal(err)
+	} else {
+		dict = strings.Split(string(file), "\n")
+	}
+	rand.Seed(time.Now().UnixNano())
+	answer = dict[rand.Intn(len(dict))]
+
+	fmt.Println(answer)
+
+	if err := ebiten.RunGame(g); err != nil {
+		log.Fatal(err)
 	}
 }
