@@ -5,6 +5,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 	"image/color"
@@ -75,6 +76,7 @@ func (g Game) Draw(screen *ebiten.Image) {
 			rect := ebiten.NewImage(75, 75)
 			rect.Fill(lightgrey)
 			fontColor = color.Black
+
 			if check[w+(h*cols)] != 0 {
 				if check[w+(h*cols)] == 1 {
 					rect.Fill(green)
@@ -86,6 +88,26 @@ func (g Game) Draw(screen *ebiten.Image) {
 					rect.Fill(grey)
 				}
 				fontColor = color.White
+			}
+
+			if w+cols*h == loc && check[w+(h*cols)] == 0 {
+				rect.Fill(grey)
+			}
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(float64(w*85+10), float64(h*85+10))
+			screen.DrawImage(rect, op)
+
+			if check[w+(h*cols)] == 0 {
+				rect2 := ebiten.NewImage(73, 73)
+				rect.Fill(color.White)
+				op2 := &ebiten.DrawImageOptions{}
+				op2.GeoM.Translate(float64(w*85+10), float64(h*85+10))
+				screen.DrawImage(rect2, op2)
+			}
+
+			if grid[w+(h*cols)] == "" {
+				msg := fmt.Sprintf(strings.ToUpper(grid[w+(h*cols)]))
+				text.Draw(screen, msg, mplusNormalFont, w*85+35, h*85+55, fontColor)
 			}
 		}
 	}
