@@ -84,7 +84,7 @@ func (g Game) Draw(screen *ebiten.Image) {
 				if check[w+(h*cols)] == 2 {
 					rect.Fill(yellow)
 				}
-				if check[w+(h*cols)] == 2 {
+				if check[w+(h*cols)] == 3 {
 					rect.Fill(grey)
 				}
 				fontColor = color.White
@@ -99,15 +99,15 @@ func (g Game) Draw(screen *ebiten.Image) {
 
 			if check[w+(h*cols)] == 0 {
 				rect2 := ebiten.NewImage(73, 73)
-				rect.Fill(color.White)
+				rect2.Fill(color.White)
 				op2 := &ebiten.DrawImageOptions{}
 				op2.GeoM.Translate(float64(w*85+10), float64(h*85+10))
 				screen.DrawImage(rect2, op2)
 			}
 
-			if grid[w+(h*cols)] == "" {
+			if grid[w+(h*cols)] != "" {
 				msg := fmt.Sprintf(strings.ToUpper(grid[w+(h*cols)]))
-				text.Draw(screen, msg, mplusNormalFont, w*85+35, h*85+55, fontColor)
+				text.Draw(screen, msg, mplusNormalFont, w*85+38, h*85+55, fontColor)
 			}
 		}
 	}
